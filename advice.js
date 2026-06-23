@@ -15,7 +15,7 @@ exports.handler = async function(event) {
     const {topic, problem, sysPrompt} = JSON.parse(event.body);
     const key = process.env.GROQ_API_KEY;
     const payload = JSON.stringify({
-      model: 
+      model: 'llama-3.3-70b-versatile'
       max_tokens: 800,
       messages: [
         {role: 'system', content: sysPrompt},
