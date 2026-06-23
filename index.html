@@ -340,18 +340,17 @@ async function getAdvice(){
   document.getElementById('pay-sec').style.display='none';
   
   try{
-    const response=await fetch('https://api.anthropic.com/v1/messages',{
+    const response=await fetch('/.netlify/functions/advice',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-haiku-4-5-20251001',
-        max_tokens:1000,
-        system:T[lang].sysPrompt,
-        messages:[{role:'user',content:`Topic: ${topic.name}\n\nProblem: ${prob}`}]
+        topic:topic.name,
+        problem:prob,
+        sysPrompt:T[lang].sysPrompt
       })
     });
     const data=await response.json();
-    advice=data.content?.map(b=>b.text||'').join('')||'Please try again.';
+    advice=data.advice||'Please try again.';
     document.getElementById('advice-out').innerHTML=`<div class="advice-text">${advice}</div>`;
     const hist=JSON.parse(localStorage.getItem('ms_hist')||'[]');
     hist.unshift({icon:topic.icon,name:topic.name,prob,advice,time:new Date().toLocaleString()});
